@@ -3,10 +3,21 @@ const Activity = require('../models/mongoose/activity');
 async function getAll(req, res) {
   // TODO CHALLENGE 04: construir el filtro de Mongoose a partir de req.query.type
   const filter = {};
+  try {
+    const{ type } = req.query;
 
+    if(type) {
+      filter.type = type
+    }
+
+  }catch (error) {
+
+  }
   // TODO CHALLENGE 02: recuperar las actividades con Mongoose
-  // Pues mongoose como es mongoDB y find() busca absolutamente todos los documentos no hay mucha complejidad
-  const activities = await Activity.find();
+  // 02: Pues mongoose como es mongoDB y find() busca absolutamente todos los documentos no hay mucha complejidad
+  // 04: Pues resulta que la misma documentacion te especifica que puedes pasar un arreglo {} los cuales fungiran como filtros, siendo el
+  // primer parametro
+  const activities = await Activity.find(filter);
 
   res.status(200).json(activities);
 }
