@@ -3,8 +3,21 @@ const { Company } = require('../models/sequelize');
 async function getAll(req, res) {
   // TODO CHALLENGE 03: construir el filtro de Sequelize a partir de req.query.industry
   const where = {};
+  try {
+    // Buscar el parametro industry en la query
+    const { industry } = req.query;
 
-  const companies = await Company.findAll({ where, order: [['id', 'ASC']] });
+    // Si existe, entonces lo agregamos al arreglo de condiciones
+    if(industry) {
+      where.industry = industry;
+    }
+
+  }catch(error) {
+    return res.status(500).json({ error: error.message });
+  }
+  // Hacemos la consulta solamente incluyendo el where, en caso de que where sea nulo directamente retornara el arreglo vacio, en caso
+  // de que no, retornara todas las incidencias
+  const companies = await Company.findAll({ where: where, order: [['id', 'ASC']] });
 
   res.status(200).json(companies);
 }
