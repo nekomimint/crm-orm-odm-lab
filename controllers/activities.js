@@ -46,7 +46,10 @@ async function create(req, res) {
 
 async function update(req, res) {
   // TODO CHALLENGE 08: revisar la operación de actualización
-  const activity = await Activity.findByIdAndUpdate(req.params.id, req.body);
+  // Segun la doc, las opciones incluyen por default en returnDocuemnt:'before', lo cual se arregla colocando el valor 'after',
+  // Tambien se puede sustituir por new:true
+  // Y parte importante segun entendi, runValidator hace que internamente ejecute validaciones especificadas en los schemas
+  const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, {returnDocument:'after', runValidators: true});
 
   if (!activity) {
     return res.status(404).json({ error: 'Activity not found' });
